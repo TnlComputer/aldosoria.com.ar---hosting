@@ -8,6 +8,9 @@
 .env
 .env.backup
 .env.prod
+/routes/web-ant
+/routes/web-newok
+
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
