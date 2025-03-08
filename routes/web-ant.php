@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// viendo que password
 
 Route::get('/', function () {
   return view('pages.home');
