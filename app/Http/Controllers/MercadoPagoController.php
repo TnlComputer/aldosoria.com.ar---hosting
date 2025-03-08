@@ -123,38 +123,65 @@ class MercadoPagoController extends Controller
     $cursoId = $request->input('external_reference');
     $userId = Auth::user()->id;
 
-    $datosCurso = Curso::where('id', $cursoId)->first();
-    $euro = Moneda::where('moneda', '=', 'EUR')->first();
+    // $datosCurso = Curso::where('id', $cursoId)->first();
+    $datosCurso = Curso::find($cursoId);
+    // $euro = Moneda::where('moneda', '=', 'EUR')->first();
+    $euro = Moneda::where('moneda', 'EUR')->first();
     $descriptionN = $datosCurso->name;
     $descriptionT = $datosCurso->title;
-    $priceARS = $datosCurso->coast * $euro->cambio;
+    // $priceARS = $datosCurso->coast * $euro->cambio;
+    $priceARS = is_numeric($datosCurso->coast) ? ($datosCurso->coast * $euro->cambio) : 0;
 
-    $date = Carbon::now();
-    $date->toDateString();
-    $fecha_vto = $date->addDay(15);
+    // $date = Carbon::now();
+    // $date->toDateString();
+    // $fecha_vto = $date->addDay(15);
+
+    $date = Carbon::now()->toDateString();
+    $fecha_vto = Carbon::now()->addDays(15); // Corregido `addDays(15)`
 
     // Guardar los datos 
-    $cursoUsuario = new CursoUsuario();
-    $cursoUsuario->curso_id = $cursoId;
-    $cursoUsuario->user_curso_id = $userId;
-    $cursoUsuario->nombre_curso = $descriptionN;
-    $cursoUsuario->titulo_curso = $descriptionT;
-    $cursoUsuario->forma_pago_curso = 4; // Ejemplo de forma de pago
-    $cursoUsuario->payment_id = $paymentId;
-    $cursoUsuario->orderId = $orderId;
-    $cursoUsuario->pago_curso = 'P'; // 
-    $cursoUsuario->amount = $priceARS;
-    $cursoUsuario->currency = 'AR$'; // Pesos
-    $cursoUsuario->fecha_inscripcion = $date; // fecha del dia del alta
-    $cursoUsuario->save();
+    // $cursoUsuario = new CursoUsuario();
+    // $cursoUsuario->curso_id = $cursoId;
+    // $cursoUsuario->user_curso_id = $userId;
+    // $cursoUsuario->nombre_curso = $descriptionN;
+    // $cursoUsuario->titulo_curso = $descriptionT;
+    // $cursoUsuario->forma_pago_curso = 4; // Ejemplo de forma de pago
+    // $cursoUsuario->payment_id = $paymentId;
+    // $cursoUsuario->orderId = $orderId;
+    // $cursoUsuario->pago_curso = 'P'; // 
+    // $cursoUsuario->amount = $priceARS;
+    // $cursoUsuario->currency = 'AR$'; // Pesos
+    // $cursoUsuario->fecha_inscripcion = $date; // fecha del dia del alta
+    // $cursoUsuario->save();
 
-    $cursoPago = new CursoPago();
-    $cursoPago->user_curso_id  = $userId;
-    $cursoPago->video_curso_id = $cursoId;
-    $cursoPago->vto_curso = $fecha_vto;
+    // Guardar la inscripción del usuario en el curso
+    CursoUsuario::create([
+      'curso_id' => $cursoId,
+      'user_curso_id' => $userId,
+      'nombre_curso' => $datosCurso->name,
+      'titulo_curso' => $datosCurso->title,
+      'forma_pago_curso' => 4, // Ejemplo de forma de pago
+      'payment_id' => $paymentId,
+      'orderId' => $orderId,
+      'pago_curso' => 'P',
+      'amount' => $priceARS,
+      'currency' => 'AR$',
+      'fecha_inscripcion' => $date,
+    ]);
 
-    $cursoPago->save();
 
+    // $cursoPago = new CursoPago();
+    // $cursoPago->user_curso_id  = $userId;
+    // $cursoPago->video_curso_id = $cursoId;
+    // $cursoPago->vto_curso = $fecha_vto;
+    // $cursoPago->save();
+
+    // Guardar el pago del curso
+    CursoPago::create([
+      'user_curso_id'  => $userId,
+      'video_curso_id' => $cursoId,
+      'vto_curso' => $fecha_vto
+    ]);
     return view('pages.thanks');
   }
 

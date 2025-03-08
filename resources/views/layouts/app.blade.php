@@ -21,9 +21,12 @@
   <link href="{{ asset('black') }}/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS -->
   <link href="{{ asset('black') }}/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
-  {{-- <link href="{{ asset('black') }}/css/theme.css" rel="stylesheet" /> --}}
+  {{--
+  <link href="{{ asset('black') }}/css/theme.css" rel="stylesheet" /> --}}
 
-  {{-- <link rel="stylesheet" href="{{ asset('black') }}/css/floating-wpp.min.css" /> --}}
+  {{--
+  <link rel="stylesheet" href="{{ asset('black') }}/css/floating-wpp.min.css" /> --}}
+
 </head>
 
 <body class="{{ $class ?? '' }}">
@@ -52,6 +55,10 @@
   <script src="{{ asset('black') }}/js/plugins/bootstrap-notify.js"></script>
   <script src="{{ asset('black') }}/js/black-dashboard.min.js?v=1.0.0"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EBHNBVS5KD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-EBHNBVS5KD'); 
+  </script>
 </body>
 
 </html>

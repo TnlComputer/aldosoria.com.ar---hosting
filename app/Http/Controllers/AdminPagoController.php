@@ -39,12 +39,18 @@ class AdminPagoController extends Controller
   public function store(Request $request)
   {
 
-    $date = Carbon::now();
-    $date->toDateString();
-    $fecha_vto = $date->addDay($request->vto_curso);
+    // dd($request);
 
-    $curso = Curso::find($request->video_curso_id)->first();
+    // $date = Carbon::now();
+    // $date->toDateString();
+    // $fecha_vto = $date->addDay($request->vto_curso);
 
+    $fecha_vto = Carbon::now()->addDays($request->vto_curso);
+
+    $curso = Curso::find($request->video_curso_id);
+
+    // dd($request, $curso);
+    
     CursoPago::create([
       'user_curso_id' => $request->user_curso_id,
       'video_curso_id' => $request->video_curso_id,
@@ -53,6 +59,7 @@ class AdminPagoController extends Controller
 
     $date = Carbon::now();
     $date->toDateString();
+
 
     CursoUsuario::create([
       'user_curso_id' => $request->user_curso_id,
