@@ -8,8 +8,7 @@
 .env
 .env.backup
 .env.prod
-/routes/web-ant
-/routes/web-newok
+/routes/web-*
 
 .phpunit.result.cache
 Homestead.json

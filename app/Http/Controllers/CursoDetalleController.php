@@ -34,7 +34,18 @@ class CursoDetalleController extends Controller
   public function pago(Request $request)
   {
 
-    $euro = Moneda::where('moneda', '=', 'EUR')->first();
+
+    $monedasMap = [
+      1 => 'ARS',
+      2 => 'EUR',
+      3 => 'USD'
+    ];
+
+    // Obtener el código de moneda correspondiente, si no existe, usar 'EUR' por defecto
+    $monedaCodigo = $monedasMap[$request->moneda] ?? 'EUR';
+
+    // Buscar la tasa de cambio de la moneda en la base de datos
+    $euro = Moneda::where('moneda', $monedaCodigo)->first();
     $metodoPagos = $request->metodoPago;
     $coast = $request->coast;
     $priceARS = $coast * $euro->cambio;
@@ -51,6 +62,7 @@ class CursoDetalleController extends Controller
       'description_name' => $descriptionN,
       'description_title' => $descriptionT,
     ];
+    // dd($request->all(), $datos);
 
     if ($metodoPagos == 'pa') {
       // dd($data);

@@ -65,6 +65,7 @@
                     <div class="col-10 text-white pb-2">
                       <input type="radio" name="metodoPago" id="pa" value="pa" checked>
                       <input type="hidden" name="coast" id="coast" value="{{ $curso->coast }}">
+                      <input type="hidden" name="moneda" id="moneda" value="{{ $curso->moneda_id }}">
                       <input type="hidden" name="curso_id" id="curso_id" value="{{ $curso->id }}">
                       <label for="pa">PayPal</label>
                     </div>

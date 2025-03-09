@@ -116,6 +116,9 @@ class MercadoPagoController extends Controller
 
   public function success(Request $request)
   {
+
+    // dd($request->all());
+
     // Obtener y procesar los datos del pago aprobado
     $paymentId = $request->input('payment_id');
     // $paymentStatus = $request->input('status');
@@ -140,34 +143,34 @@ class MercadoPagoController extends Controller
     $fecha_vto = Carbon::now()->addDays(15); // Corregido `addDays(15)`
 
     // Guardar los datos 
-    // $cursoUsuario = new CursoUsuario();
-    // $cursoUsuario->curso_id = $cursoId;
-    // $cursoUsuario->user_curso_id = $userId;
-    // $cursoUsuario->nombre_curso = $descriptionN;
-    // $cursoUsuario->titulo_curso = $descriptionT;
-    // $cursoUsuario->forma_pago_curso = 4; // Ejemplo de forma de pago
-    // $cursoUsuario->payment_id = $paymentId;
-    // $cursoUsuario->orderId = $orderId;
-    // $cursoUsuario->pago_curso = 'P'; // 
-    // $cursoUsuario->amount = $priceARS;
-    // $cursoUsuario->currency = 'AR$'; // Pesos
-    // $cursoUsuario->fecha_inscripcion = $date; // fecha del dia del alta
-    // $cursoUsuario->save();
+    $cursoUsuario = new CursoUsuario();
+    $cursoUsuario->curso_id = $cursoId;
+    $cursoUsuario->user_curso_id = $userId;
+    $cursoUsuario->nombre_curso = $descriptionN;
+    $cursoUsuario->titulo_curso = $descriptionT;
+    $cursoUsuario->forma_pago_curso = 4; // Ejemplo de forma de pago
+    $cursoUsuario->payment_id = $paymentId;
+    $cursoUsuario->orderId = $orderId;
+    $cursoUsuario->pago_curso = 'P'; // 
+    $cursoUsuario->amount = $priceARS;
+    $cursoUsuario->currency = 'AR$'; // Pesos
+    $cursoUsuario->fecha_inscripcion = $date; // fecha del dia del alta
+    $cursoUsuario->save();
 
     // Guardar la inscripción del usuario en el curso
-    CursoUsuario::create([
-      'curso_id' => $cursoId,
-      'user_curso_id' => $userId,
-      'nombre_curso' => $datosCurso->name,
-      'titulo_curso' => $datosCurso->title,
-      'forma_pago_curso' => 4, // Ejemplo de forma de pago
-      'payment_id' => $paymentId,
-      'orderId' => $orderId,
-      'pago_curso' => 'P',
-      'amount' => $priceARS,
-      'currency' => 'AR$',
-      'fecha_inscripcion' => $date,
-    ]);
+    // CursoUsuario::create([
+    //   'curso_id' => $cursoId,
+    //   'user_curso_id' => $userId,
+    //   'nombre_curso' => $datosCurso->name,
+    //   'titulo_curso' => $datosCurso->title,
+    //   'forma_pago_curso' => 4, // Ejemplo de forma de pago 4 es MercadoPago
+    //   'payment_id' => $paymentId,
+    //   'orderId' => $orderId,
+    //   'pago_curso' => 'P',
+    //   'amount' => $priceARS,
+    //   'currency' => 'ARG',
+    //   'fecha_inscripcion' => $date,
+    // ]);
 
 
     // $cursoPago = new CursoPago();
