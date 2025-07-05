@@ -47,6 +47,9 @@ Route::get('/mantenimientos', [MaintenanceController::class, 'index'])->name('ma
 Route::get('/contactos', [ContactController::class, 'index'])->name('contacto');
 
 
+Route::post('/envio_contacto', [ContactController::class, 'enviar'])->name('contacto.enviar');
+
+
 
 // Mercadopago
 Route::prefix('mercadopago')->group(function () {
@@ -58,20 +61,6 @@ Route::prefix('mercadopago')->group(function () {
   Route::get('/failure', [MercadoPagoController::class, 'failure'])->name('mercadopago.failure');
   Route::get('/pending', [MercadoPagoController::class, 'pending'])->name('mercadopago.pending');
 });
-
-
-// Route::post('/mercadopago/create-preference', [MercadoPagoController::class, 'createPreference'])->name('mercadopago.create-preference');
-// Route::put('/mercadopago/make-put-request', [MercadoPagoController::class, 'makePutRequest'])->name('mercadopago.make-put-request');
-// Route::post('/mercadopago/webhook', [MercadoPagoController::class, 'webhook'])->name('mercadopago.webhook');
-
-
-// Route::get('/payment', [MercadoPagoController::class, 'index'])->name('mercadopago.index');
-// Route::post('/payment/createPreference', [MercadoPagoController::class, 'createPreference'])->name('mercadopago.createPreference');
-// Route::post('/webhook', [MercadoPagoController::class, 'webhook'])->name('mercadopago.webhook');
-
-// Route::get('/payment/success', [MercadoPagoController::class, 'success'])->name('mppayment.success');
-// Route::get('/payment/failure', [MercadoPagoController::class, 'failure'])->name('mppayment.failure');
-// Route::get('/payment/pending', [MercadoPagoController::class, 'pending'])->name('mppayment.pending');
 
 
 //PayPal
@@ -110,24 +99,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::resource('/dashboard/admin/marcas', AdminMarcasController::class);
   // Route::resource('/dashboard/test', AdminTestController::class);
 
-  // MercadoPago
-  // Route::get('/create_preference', MercadoPagoController::class)->name('create_preference');
-  // Route::get('mppayment/success', [MercadoPagoController::class, 'success'])->name('mppayment.success');
-  // Route::get('mppayment/failure', [MercadoPagoController::class, 'failure'])->name('mppayment.failure');
-  // Route::get('mppayment/pending', [MercadoPagoController::class, 'pending'])->name('mppayment.pending');
-
-
-  //   Route::get('/mppayment/success', function () {
-  //     return view('pages.mppayment.success');
-  //   })->name('mppayment.success');
-
-  //   Route::get('/mppayment/failure', function () {
-  //     return view('pages.mppayment.failure');
-  //   })->name('mppayment.failure');
-
-  //   Route::get('/mppayment/pending', function () {
-  //     return view('pages.mppayment.pending');
-  //   })->name('mppayment.pending');
 });
 
 require __DIR__ . '/auth.php';

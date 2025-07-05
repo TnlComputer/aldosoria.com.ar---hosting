@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -15,51 +16,24 @@ class ContactController extends Controller
     return view('pages.contacto');
   }
 
-  /**
-   * Show the form for creating a new resource.
-   */
-  public function create()
-  {
-    //
-  }
 
-  /**
-   * Store a newly created resource in storage.
-   */
-  public function store(Request $request)
+  public function enviar(Request $request)
   {
-    //
-  }
 
-  /**
-   * Display the specified resource.
-   */
-  public function show(contact $contact)
-  {
-    //
-  }
+    dd($request->all());
+    $datos = $request->validate([
+      'txtNombre' => 'required|string|max:255',
+      'txtTelefono' => 'required|string|max:20',
+      'txtEmail' => 'required|email',
+      'txtAsunto' => 'required|string|max:255',
+      'txtMensaje' => 'required|string',
+    ]);
 
-  /**
-   * Show the form for editing the specified resource.
-   */
-  public function edit(contact $contact)
-  {
-    //
-  }
+    Mail::send('emails.contacto', ['datos' => $datos], function ($message) use ($datos) {
+      $message->to('aldosoria@gmail.com', 'Aldo Soria')
+        ->subject('Nuevo mensaje de contacto: ' . $datos['txtAsunto']);
+    });
 
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, contact $contact)
-  {
-    //
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(contact $contact)
-  {
-    //
+    return back()->with('success', '¡Mensaje enviado correctamente!');
   }
 }

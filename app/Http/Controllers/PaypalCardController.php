@@ -6,6 +6,9 @@ use App\Models\CursoPago;
 use App\Models\CursoUsuario;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PagoExitosoMail;
+
 
 
 class PaypalCardController extends Controller
@@ -50,6 +53,17 @@ class PaypalCardController extends Controller
     $cursoPago->vto_curso = $fecha_vto;
 
     $cursoPago->save();
+
+    // Definí los mails
+    $clienteEmail = $datos['email'] ?? null;
+
+    // Enviar al cliente (si tiene email)
+    if ($clienteEmail) {
+      Mail::to($clienteEmail)->send(new PagoExitosoMail($datos));
+    }
+
+    // Enviar al administrador
+    Mail::to('aldosoria@gmail.com')->send(new PagoExitosoMail($datos));
 
     // Retornar respuesta JSON
     return response()->json(['mensaje' => 'Pago procesado correctamente']);

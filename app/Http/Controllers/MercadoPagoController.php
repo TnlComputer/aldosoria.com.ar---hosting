@@ -16,6 +16,9 @@ use MercadoPago\Payment;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use function Laravel\Prompts\alert;
+use App\Mail\PagoExitosoMail;
+use Illuminate\Support\Facades\Mail;
+
 
 class MercadoPagoController extends Controller
 {
@@ -86,26 +89,8 @@ class MercadoPagoController extends Controller
     try {
       $data = $request->all();
 
-      // $response = await fetch('https://api.mercadopago.com/v1/payments/'.{{$data->paymentId}}, {
-      //   method: 'GET'
-      //   headers: {
-      //     'Authorization' => 'Bearer ' . ${}
-      //   }
-      // })
 
       Log::info('Webhook recibido: ', $data);
-      // $payload = $request->all();
-      // $this->verifyWebhookSignature($request);
-
-
-      // Procesar la notificación recibida
-      // $paymentId = $data['data']['id'];
-      // $paymentStatus = $data['type'];
-      // dd('webhook ', $request, $paymentId, $paymentStatus);
-
-      // Obtener los datos externos
-      // $externalReference = $payload['data']['external_reference'];
-      // $customData = $payload['data']['metadata']['custom_data'];
 
       return response()->json(['message' => 'Webhook recibido'], 200);
     } catch (\Exception $e) {
@@ -157,34 +142,29 @@ class MercadoPagoController extends Controller
     $cursoUsuario->fecha_inscripcion = $date; // fecha del dia del alta
     $cursoUsuario->save();
 
-    // Guardar la inscripción del usuario en el curso
-    // CursoUsuario::create([
-    //   'curso_id' => $cursoId,
-    //   'user_curso_id' => $userId,
-    //   'nombre_curso' => $datosCurso->name,
-    //   'titulo_curso' => $datosCurso->title,
-    //   'forma_pago_curso' => 4, // Ejemplo de forma de pago 4 es MercadoPago
-    //   'payment_id' => $paymentId,
-    //   'orderId' => $orderId,
-    //   'pago_curso' => 'P',
-    //   'amount' => $priceARS,
-    //   'currency' => 'ARG',
-    //   'fecha_inscripcion' => $date,
-    // ]);
-
-
-    // $cursoPago = new CursoPago();
-    // $cursoPago->user_curso_id  = $userId;
-    // $cursoPago->video_curso_id = $cursoId;
-    // $cursoPago->vto_curso = $fecha_vto;
-    // $cursoPago->save();
-
     // Guardar el pago del curso
     CursoPago::create([
       'user_curso_id'  => $userId,
       'video_curso_id' => $cursoId,
       'vto_curso' => $fecha_vto
     ]);
+
+    // Armar datos para el email
+    $datosMail = [
+      'curso' => $datosCurso->title,
+      'monto' => $priceARS,
+      'fecha' => $date,
+    ];
+
+    // Obtener el email del usuario autenticado
+    $clienteEmail = Auth::user()->email;
+
+    // Enviar al cliente
+    Mail::to($clienteEmail)->send(new PagoExitosoMail($datosMail));
+
+    // Enviar copia al administrador
+    Mail::to('aldosoria@gmail.com')->send(new PagoExitosoMail($datosMail));
+
     return view('pages.thanks');
   }
 
